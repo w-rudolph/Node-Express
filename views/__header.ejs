@@ -18,3 +18,8 @@
        <li><a href="/contact">Contact</a></li>
       </ul>
     </div>
+    <div id="log_status">
+      <%if(typeof username !== 'undefined'){%><span> Hi, <%=username%> <a href="/logout">Logout</a></span> <%} else { %>
+       <span><a href="Login">login</a></span>
+      <%}%>
+    </div>
