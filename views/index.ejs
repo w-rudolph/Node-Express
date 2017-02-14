@@ -1,0 +1,10 @@
+<%include __header.ejs%>
+ <div id="main">
+   <p>Hello world!</p>
+   <ul>
+     <%for(var i = 0; i < users.length; i++){%>
+       <li>Name: <%=users[i].name%> - Age: <%=users[i].age%> <img width="20" src="/public/image/<%=i+1%>.jpg"></li>
+     <%}%>
+   </ul>
+ </div>
+<%include __footer.ejs%>

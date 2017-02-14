@@ -1,0 +1,39 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+#menu,
+#footer,
+#main{
+   padding: 10px;
+}
+ul{ 
+   list-style: none;
+}
+#menu{
+   border-bottom: 1px solid #ddd;
+   text-align: center;
+}
+#footer{
+   border-top: 1px solid #ddd;
+}
+#menu ul{
+   overflow: hidden;
+   display: inline-block;
+   margin: 0 auto;
+}
+#menu ul > li{
+   float: left;
+   padding: 5px;
+}
+#menu a{
+   text-decoration: none;
+   padding: 5px;
+   color: #000;
+}
+#menu a:hover{
+   background: #ccc;
+}
+#footer{
+   text-align: center;
+}
