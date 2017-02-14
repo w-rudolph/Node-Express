@@ -21,6 +21,9 @@ router.use(function(req, res, next){
 	if(req.url.indexOf('/login') === -1 && !req.session.user){
 		return res.redirect('/login?redirect_url=' + encodeURIComponent(req.url));
 	}
+	if(req.url.indexOf('/login') !== -1 && req.session.user){
+		return res.redirect('/');
+	}
 	next();
 });
 router.get('/', function(req, res){
