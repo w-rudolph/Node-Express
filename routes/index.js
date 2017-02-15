@@ -18,108 +18,108 @@ router.use(session({
 }));
 //router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
-router.use(function(req, res, next){
-	if(req.url.indexOf('/login') === -1 && req.url.indexOf('/register') === -1 && !req.session.user){
-		return res.redirect('/login?redirect_url=' + encodeURIComponent(req.url));
-	}
-	if(req.url.indexOf('/login') !== -1 && req.session.user){
-		return res.redirect('/');
-	}
-	next();
+router.use(function (req, res, next) {
+    if (req.url.indexOf('') === -1 && req.url.indexOf('/register') === -1 && !req.session.user) {
+        return res.redirect('/login?redirect_url=' + encodeURIComponent(req.url));
+    }
+    if (req.url.indexOf('/login') !== -1 && req.session.user) {
+        return res.redirect('/');
+    }
+    next();
 });
-router.get('/', function(req, res){
-   User.getUsers((err, rows, fields) => {
-	  if(!err)
-    res.render('index', {
-		  users: rows,
-		  title: 'index page',
-		  username:req.session.user.name
+router.get('/', function (req, res) {
+    User.getUsers((err, rows, fields) => {
+        if (!err)
+            res.render('index', {
+                users: rows,
+                title: 'index page',
+                username: req.session.user.name
+            });
+    })
+})
+.get('/about', function (req, res) {
+    res.render('about', {
+        content: 'About page',
+        title: 'About page',
+        username: req.session.user.name
     });
-   })
 })
-.get('/about', function(req, res){
-  res.render('about', {
-	  content: 'About page',
-	  title: 'About page',
-	  username:req.session.user.name
-  });
+.get('/contact', function (req, res) {
+    res.render('contact', {
+        content: 'Contact page',
+        title: 'Contact page',
+        username: req.session.user.name
+    });
 })
-.get('/contact', function(req, res){
-  res.render('contact',{
-	  content: 'Contact page',
-	  title: 'Contact page',
-	  username:req.session.user.name
-  });
-})
-.get('/login', function(req, res){
-  renderPage(res, req, 'login', '');
+.get('/login', function (req, res) {
+    renderPage(res, req, 'login', '');
 })
 .get('/register', (req, res) => {
-  renderPage(res, req, 'register', '');
+    renderPage(res, req, 'register', '');
 })
-.post('/login*', function(req, res){
-	if(req.body.username && req.body.password){
-		User.authUser(req.body.username, req.body.password, (err, rows, fields) =>{
-			if(!err){
-				if(rows.length !== 0){
-					let matched = req.url.match(/redirect_url=(.*)/);
-					let resirect_url = matched && matched.length > 1 && matched[1] ? matched[1] : "/";
-					req.session.user = rows[0];
-					res.redirect(decodeURIComponent(resirect_url));
-					req.session.msg = "";
-				}else{
-           renderPage(res, req, 'login', '密码或账号错误');
-			  }
-			}
-		})
-	}else{
-     renderPage(res, req, 'login', '密码或账号不能为空');
-	}
+.post('/login*', function (req, res) {
+    if (req.body.username && req.body.password) {
+        User.authUser(req.body.username, req.body.password, (err, rows, fields) => {
+            if (!err) {
+                if (rows.length !== 0) {
+                    let matched = req.url.match(/redirect_url=(.*)/);
+                    let resirect_url = matched && matched.length > 1 && matched[1] ? matched[1] : "/";
+                    req.session.user = rows[0];
+                    res.redirect(decodeURIComponent(resirect_url));
+                    req.session.msg = "";
+                } else {
+                    renderPage(res, req, 'login', '密码或账号错误');
+                }
+            }
+        })
+    } else {
+        renderPage(res, req, 'login', '密码或账号不能为空');
+    }
 })
-.get('/logout', function(req, res){
-	req.session.user = null;
-	res.redirect('login');
+.get('/logout', function (req, res) {
+    req.session.user = null;
+    res.redirect('login');
 })
 .post('/register', (req, res) => {
-	if(req.body.username && req.body.password){
-		User.register(req.body.username, req.body.password, (err, data) =>{
-			if(!err){
-				req.session.user = data;
-				req.session.msg = '';
-				res.redirect('/');
-			}else{
-				if(err === 'USER_EXIST'){
-		       renderPage(res, req, 'register', '用户已存在');
-				}
-			}
-		})
-	}else{
-		renderPage(res, req,'register','密码或账号不能为空');
-	}
+    if (req.body.username && req.body.password) {
+        User.register(req.body.username, req.body.password, (err, data) => {
+            if (!err) {
+                req.session.user = data;
+                req.session.msg = '';
+                res.redirect('/');
+            } else {
+                if (err === 'USER_EXIST') {
+                    renderPage(res, req, 'register', '用户已存在');
+                }
+            }
+        })
+    } else {
+        renderPage(res, req, 'register', '密码或账号不能为空');
+    }
 });
 
 //404
-router.get('*', function(req, res){
-  res.render('404', {
-	  title: 'Page Not Found!',
-	  username: req.session.user ? req.session.user.name : undefined
-  })
+router.get('*', function (req, res) {
+    res.render('404', {
+        title: 'Page Not Found!',
+        username: req.session.user ? req.session.user.name : undefined
+    })
 })
-function renderPage(res, req, tpl, msg){
-  let content, title;
-  if(tpl === 'register'){
-     content = 'register page';
-     title = 'Register page';
-  }
-  if(tpl === 'login'){
-    content = 'login page';
-    title = 'Login page';
-  }
-	res.render(tpl,{
-     content: content,
-     title: title,
-     url: req.url,
-     msg: msg
-  });
+function renderPage(res, req, tpl, msg) {
+    let content, title;
+    if (tpl === 'register') {
+        content = 'register page';
+        title = 'Register page';
+    }
+    if (tpl === 'login') {
+        content = 'login page';
+        title = 'Login page';
+    }
+    res.render(tpl, {
+        content: content,
+        title: title,
+        url: req.url,
+        msg: msg
+    });
 }
 module.exports = router;
