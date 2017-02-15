@@ -1,8 +1,9 @@
 <%include __header.ejs%>
  <div id="main">
    <ul>
+     <h3>User Lists:</h3>
      <%for(var i = 0; i < users.length; i++){%>
-       <li>Name: <%=users[i].name%> - Age: <%=users[i].age%> <img width="20" src="/public/image/<%=i+1%>.jpg"></li>
+       <li>Name: <%=users[i].name%></li>
      <%}%>
    </ul>
  </div>

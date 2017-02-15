@@ -40,3 +40,6 @@ ul{
 #log_status{
    text-align: right;
 }
+.error{
+   color: #f00;
+}
