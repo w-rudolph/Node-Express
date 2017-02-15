@@ -78,9 +78,9 @@ router.get('/', function(req, res){
 					res.redirect(decodeURIComponent(resirect_url));
 					req.session.msg = "";
 				}else{
-				    renderPage(res, 'register', {
-						  content: 'register page',
-						  title: 'Register page',
+				    renderPage(res, 'login', {
+						  content: 'login page',
+						  title: 'Login page',
 						  url: req.url,
 						  msg: '密码或账号错误'
 					 })
@@ -88,9 +88,9 @@ router.get('/', function(req, res){
 			}
 		})
 	}else{
-		renderPage(res, 'register', {
-			  content: 'register page',
-		      title: 'Register page',
+		renderPage(res, 'login', {
+			  content: 'login page',
+		      title: 'Login page',
 			  url: req.url,
 			  msg: '密码或账号不能为空'
 		 })
