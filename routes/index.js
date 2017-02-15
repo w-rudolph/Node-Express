@@ -8,10 +8,10 @@ const User = require('../models/user.js');
 router.use(cookieParser());
 router.use(session({
     name: 'a3sc67esasff',
-    secret: 'sessionid',   
-    store: new FileStore(),   
-    saveUninitialized: false,  
-    resave: false, 
+    secret: 'sessionid',
+    store: new FileStore(),
+    saveUninitialized: false,
+    resave: false,
     cookie: {
         maxAge: 24 * 60 * 1000
     }
@@ -30,11 +30,11 @@ router.use(function(req, res, next){
 router.get('/', function(req, res){
    User.getUsers((err, rows, fields) => {
 	  if(!err)
-        res.render('index', {
+    res.render('index', {
 		  users: rows,
 		  title: 'index page',
 		  username:req.session.user.name
-       });		   
+    });
    })
 })
 .get('/about', function(req, res){
@@ -52,20 +52,10 @@ router.get('/', function(req, res){
   });
 })
 .get('/login', function(req, res){
-  res.render('login',{
-	  content: 'Login page',
-	  title: 'Login page',
-	  url: req.url,
-	  msg: ""
-  });
+  renderPage(res, req, 'login', '');
 })
 .get('/register', (req, res) => {
-	renderPage(res, 'register',{
-	  content: 'register page',
-	  title: 'Register page',
-	  url: req.url,
-	  msg: ""
-  });
+  renderPage(res, req, 'register', '');
 })
 .post('/login*', function(req, res){
 	if(req.body.username && req.body.password){
@@ -78,22 +68,12 @@ router.get('/', function(req, res){
 					res.redirect(decodeURIComponent(resirect_url));
 					req.session.msg = "";
 				}else{
-				    renderPage(res, 'login', {
-						  content: 'login page',
-						  title: 'Login page',
-						  url: req.url,
-						  msg: '密码或账号错误'
-					 })
-			    }
+           renderPage(res, req, 'login', '密码或账号错误');
+			  }
 			}
 		})
 	}else{
-		renderPage(res, 'login', {
-			  content: 'login page',
-		      title: 'Login page',
-			  url: req.url,
-			  msg: '密码或账号不能为空'
-		 })
+     renderPage(res, req, 'login', '密码或账号不能为空');
 	}
 })
 .get('/logout', function(req, res){
@@ -109,22 +89,12 @@ router.get('/', function(req, res){
 				res.redirect('/');
 			}else{
 				if(err === 'USER_EXIST'){
-		            renderPage(res, 'register', {
-						  content: 'register page',
-						  title: 'Register page',
-						  url: req.url,
-						  msg: '用户已存在'
-					})
+		       renderPage(res, req, 'register', '用户已存在');
 				}
 			}
 		})
 	}else{
-		renderPage(res, 'register', {
-			  content: 'register page',
-		      title: 'Register page',
-			  url: req.url,
-			  msg: '密码或账号不能为空'
-		 })
+		renderPage(res, req,'register','密码或账号不能为空');
 	}
 });
 
@@ -132,10 +102,24 @@ router.get('/', function(req, res){
 router.get('*', function(req, res){
   res.render('404', {
 	  title: 'Page Not Found!',
-	  username:req.session.user.name
+	  username: req.session.user ? req.session.user.name : undefined
   })
 })
-function renderPage(res, tpl, options){
-	res.render(tpl,options);
+function renderPage(res, req, tpl, msg){
+  let content, title;
+  if(tpl === 'register'){
+     content = 'register page';
+     title = 'Register page';
+  }
+  if(tpl === 'login'){
+    content = 'login page';
+    title = 'Login page';
+  }
+	res.render(tpl,{
+     content: content,
+     title: title,
+     url: req.url,
+     msg: msg
+  });
 }
 module.exports = router;
