@@ -8,8 +8,8 @@ User.getUsers = (cb) => {
     });
 }
 User.authUser = ((name, pwd, cb) =>{
-    let sql = "select * from `user` where user.name = '"+ name +"' and user.password = '"+ pwd +"' ";
-    db.query(sql,(err, rows, fields) => {
+    let sql = "select * from `user` where user.name = ? and user.password = ? ";
+    db.query(sql,[name, pwd],(err, rows, fields) => {
        cb(err, rows, fields);
     });
 });
